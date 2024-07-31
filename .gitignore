@@ -1,0 +1,14 @@
+
+single_wavelength_band/__pycache__/
+
+two_wavelength_bands/__pycache__/
+
+single_index/__pycache__/
+
+rice_special/__pycache__/rice_special.cpython-310.pyc
+
+rice_special/__pycache__/two_wavelength_bands.cpython-310.pyc
+
+two_indices/__pycache__/two_indices.cpython-310.pyc
+
+.idea/
