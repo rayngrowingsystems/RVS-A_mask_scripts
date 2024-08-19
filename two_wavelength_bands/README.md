@@ -12,7 +12,7 @@ XOR = differences between both single-index masks
 [(plantCV documentation)](https://plantcv.readthedocs.io/en/stable/logical_xor/)
 
 
-© 2024 RAYN Growing Systems, All Rights Reserved. Licensed under the Apache License, Version 2.0
+© 2024 ETC Inc d/b/a RAYN Growing Systems. Licensed under the Apache License, Version 2.0
 
 Trademark and patent info: [rayngrowingsystems.com/ip](https://rayngrowingsystems.com/ip/) \
 Third-party license agreement info: [etcconnect.com/licenses](https://www.etcconnect.com/licenses/) \

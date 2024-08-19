@@ -6,7 +6,7 @@ The reflection index can be selected from a drop-down menu and the threshold can
 Note: Different reflection indices have different ranges. The slider ranges are adjusted accordingly.
 (See file rayn_utils.py for available indices and the respective ranges)
 
-© 2024 RAYN Growing Systems, All Rights Reserved. Licensed under the Apache License, Version 2.0
+© 2024 ETC Inc d/b/a RAYN Growing Systems. Licensed under the Apache License, Version 2.0
 
 Trademark and patent info: [rayngrowingsystems.com/ip](https://rayngrowingsystems.com/ip/) \
 Third-party license agreement info: [etcconnect.com/licenses](https://www.etcconnect.com/licenses/) \
