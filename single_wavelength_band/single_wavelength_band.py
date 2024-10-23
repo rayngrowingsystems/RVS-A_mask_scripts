@@ -15,7 +15,6 @@
 import os
 import warnings
 from plantcv import plantcv as pcv
-import numpy as np
 import rayn_utils
 
 
@@ -29,34 +28,7 @@ def create_mask(settings, mask_preview=True):
     fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
     dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
 
-    # undistort (lens angle) and normalize
-    lens_angle = settings["experimentSettings"]["imageOptions"]["lensAngle"]
-    dark_normalize = settings["experimentSettings"]["imageOptions"]["normalize"]
-
-    # check if a .hdr file name was provided and set img_file to the binary location
-    if os.path.splitext(img_file)[1] == ".hdr":
-        img_file = os.path.splitext(img_file)[0]
-
-    else:
-        warnings.warn("No header file provided. Processing not possible.")
-        return
-
-    # begin masking workflow
-    spectral_array = pcv.readimage(filename=img_file, mode='envi')
-    spectral_array.array_data = spectral_array.array_data.astype("float32")  # required for further calculations
-    if spectral_array.d_type == np.uint8:  # only convert if data seems to be uint8
-        spectral_array.array_data = spectral_array.array_data / 255  # convert 0-255 (orig.) to 0-1 range
-
-    # normalize the image cube
-    if dark_normalize:
-        spectral_array.array_data = rayn_utils.dark_normalize_array_data(spectral_array)
-
-    # undistort the image cube
-    if lens_angle != 0:  # only undistort if angle is selected
-        cam_calibration_file = f"calibration_data/{lens_angle}_calibration_data.yml"  # select the data set
-        mtx, dist = rayn_utils.load_coefficients(cam_calibration_file)  # depending on the lens angle
-        spectral_array.array_data = rayn_utils.undistort_data_cube(spectral_array.array_data, mtx, dist)
-        spectral_array.pseudo_rgb = rayn_utils.undistort_data_cube(spectral_array.pseudo_rgb, mtx, dist)
+    spectral_array = rayn_utils.prepare_spectral_data(settings)
 
     # get data from selected wavelength band
     if (selected_wl != "None") and (selected_wl != ""):

@@ -28,7 +28,8 @@ Whether it's fixing bugs, adding functionality to existing mask scripts or addin
 scripts, we welcome contributions.
 
 ## Create Your Own RVS Mask Scripts
-Instructions on how to create your own mask scrips will be linked here.
+More information, details and explanations on how to create custom RVS mask scripts can be found here: 
+[Custom Scripts (RVS-A)](https://github.com/rayngrowingsystems/RVS-A_custom_scripts)
 
 ## License and Copyright
 © 2024 ETC Inc d/b/a RAYN Growing Systems. Licensed under the Apache License, Version 2.0
