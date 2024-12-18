@@ -28,7 +28,7 @@ def create_mask(settings, mask_preview=True):
     fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
     dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
 
-    spectral_array = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
     # get data from selected wavelength band
     if (selected_wl != "None") and (selected_wl != ""):

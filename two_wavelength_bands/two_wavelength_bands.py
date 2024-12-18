@@ -32,7 +32,7 @@ def create_mask(settings, mask_preview=True):
     fill_size = mask_options["fill_size"]
     dilate_pixel = mask_options["dilate_pixel"]
 
-    spectral_array = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
     # extract data of the selected wavelength bands
     if (wavelength1 != "None") and (wavelength1 != ""):
