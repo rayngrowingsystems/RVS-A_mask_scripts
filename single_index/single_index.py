@@ -81,4 +81,4 @@ def create_mask(settings, mask_preview=True):
         print("Writing image to " + image_file_name)
         pcv.print_image(img=binary_img, filename=image_file_name)
 
-    return spectral_array, binary_img
+    return spectral_array, rvs_metadata, binary_img
