@@ -65,14 +65,19 @@ def create_mask(settings, mask_preview=True):
     fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
     dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
 
+    if settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]:
+        mask_object = "dark"
+    else:
+        mask_object = "light"
+
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
     # calculating index for mask
     index_functions = rayn_utils.get_index_functions()
     index1_array = index_functions[mask_index1][1](spectral_array, 20)  # TODO: expose the distance parameter
-    binary_img1 = pcv.threshold.binary(gray_img=index1_array.array_data, threshold=index1_thresh)
+    binary_img1 = pcv.threshold.binary(gray_img=index1_array.array_data, threshold=index1_thresh, object_type=mask_object)
     index2_array = index_functions[mask_index2][1](spectral_array, 20)  # TODO: expose the distance parameter
-    binary_img2 = pcv.threshold.binary(gray_img=index2_array.array_data, threshold=index2_thresh)
+    binary_img2 = pcv.threshold.binary(gray_img=index2_array.array_data, threshold=index2_thresh, object_type=mask_object)
 
     if logic_input == "logic_and":
         combined_binary_img = pcv.logical_and(binary_img1, binary_img2)
