@@ -31,10 +31,7 @@ def create_mask(settings, mask_preview=True):
     wl2_thresh = mask_options["wl2_thresh"]
     fill_size = mask_options["fill_size"]
     dilate_pixel = mask_options["dilate_pixel"]
-    if mask_options["invert_mask"]:
-        mask_object = "dark"
-    else:
-        mask_object = "light"
+    invert_mask = mask_options["invert_mask"]
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
@@ -55,8 +52,8 @@ def create_mask(settings, mask_preview=True):
         warnings.warn("No wavelength for mask selected. Defaulting to first in list")
 
     # creating binary masks from the selected wavelength bands
-    binary_img1 = pcv.threshold.binary(gray_img=selected_layer1, threshold=wl1_thresh, object_type=mask_object)
-    binary_img2 = pcv.threshold.binary(gray_img=selected_layer2, threshold=wl2_thresh, object_type=mask_object)
+    binary_img1 = pcv.threshold.binary(gray_img=selected_layer1, threshold=wl1_thresh)
+    binary_img2 = pcv.threshold.binary(gray_img=selected_layer2, threshold=wl2_thresh)
 
     if logic_input == "logic_and":
         combined_binary_img = pcv.logical_and(binary_img1, binary_img2)
@@ -72,6 +69,9 @@ def create_mask(settings, mask_preview=True):
 
     if dilate_pixel:
         combined_binary_img = pcv.dilate(gray_img=combined_binary_img, ksize=2, i=2)
+
+    if invert_mask:
+        combined_binary_img = pcv.invert(combined_binary_img)
 
     if mask_preview:
         out_image = settings["outputImage"]
