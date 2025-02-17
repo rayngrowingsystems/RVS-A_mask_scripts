@@ -12,3 +12,5 @@ rice_special/__pycache__/two_wavelength_bands.cpython-310.pyc
 two_indices/__pycache__/two_indices.cpython-310.pyc
 
 .idea/
+
+two_indices/__pycache__/

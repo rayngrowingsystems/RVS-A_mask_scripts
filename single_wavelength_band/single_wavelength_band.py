@@ -27,8 +27,9 @@ def create_mask(settings, mask_preview=True):
     wl_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["wl_thresh"]
     fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
     dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
+    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
 
-    spectral_array = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
     # get data from selected wavelength band
     if (selected_wl != "None") and (selected_wl != ""):
@@ -47,10 +48,13 @@ def create_mask(settings, mask_preview=True):
     if dilate_pixel:
         binary_img = pcv.dilate(gray_img=binary_img, ksize=2, i=2)
 
+    if invert_mask:
+        binary_img = pcv.invert(binary_img)
+
     if mask_preview:
         out_image = settings["outputImage"]
         image_file_name = os.path.normpath(out_image)
         print("Writing image to " + image_file_name)
         pcv.print_image(img=binary_img, filename=image_file_name)
 
-    return spectral_array, binary_img
+    return spectral_array, rvs_metadata, binary_img

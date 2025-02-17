@@ -60,8 +60,9 @@ def create_mask(settings, mask_preview=True):
     index_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index_thresh"]
     fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
     dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
+    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
 
-    spectral_array = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
     # calculating index for mask
     index_functions = rayn_utils.get_index_functions()
@@ -69,11 +70,15 @@ def create_mask(settings, mask_preview=True):
     print(f"min: {np.ma.masked_invalid(index_array.array_data).min()}, "
           f"max: {np.ma.masked_invalid(index_array.array_data).max()}, "
           f"mean: {np.ma.masked_invalid(index_array.array_data).mean()}")
+
     binary_img = pcv.threshold.binary(gray_img=index_array.array_data, threshold=index_thresh)
     binary_img = pcv.fill(bin_img=binary_img, size=fill_size)  # fill pixel
 
     if dilate_pixel:
         binary_img = pcv.dilate(gray_img=binary_img, ksize=2, i=2)
+
+    if invert_mask:
+        binary_img = pcv.invert(binary_img)
 
     if mask_preview:
         out_image = settings["outputImage"]
@@ -81,4 +86,4 @@ def create_mask(settings, mask_preview=True):
         print("Writing image to " + image_file_name)
         pcv.print_image(img=binary_img, filename=image_file_name)
 
-    return spectral_array, binary_img
+    return spectral_array, rvs_metadata, binary_img
