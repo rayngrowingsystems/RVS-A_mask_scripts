@@ -19,8 +19,6 @@ import rayn_utils
 
 
 def create_mask(settings, mask_preview=True):
-    # file and folder
-    img_file = settings["inputImage"]
 
     # extract masking setting
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]

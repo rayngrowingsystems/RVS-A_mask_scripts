@@ -53,8 +53,6 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
 
 
 def create_mask(settings, mask_preview=True):
-    # file and folder
-    img_file = settings["inputImage"]
 
     # extract masking setting
     mask_index1 = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index1"]
