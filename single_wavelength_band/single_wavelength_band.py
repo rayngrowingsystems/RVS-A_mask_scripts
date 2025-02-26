@@ -26,6 +26,7 @@ def create_mask(settings, mask_preview=True):
     fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
     dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
     invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
+    overlay_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["overlay_mask"]
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
 
@@ -49,10 +50,6 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         binary_img = pcv.invert(binary_img)
 
-    if mask_preview:
-        out_image = settings["outputImage"]
-        image_file_name = os.path.normpath(out_image)
-        print("Writing image to " + image_file_name)
-        pcv.print_image(img=binary_img, filename=image_file_name)
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, settings, mask_preview, overlay_mask)
 
     return spectral_array, rvs_metadata, binary_img
