@@ -79,6 +79,6 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         binary_img = pcv.invert(binary_img)
 
-    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, settings, mask_preview, overlay_mask)
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
 
     return spectral_array, rvs_metadata, binary_img
