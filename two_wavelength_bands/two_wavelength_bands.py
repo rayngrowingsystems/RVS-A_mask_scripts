@@ -32,7 +32,7 @@ def create_mask(settings, mask_preview=True):
     invert_mask = mask_options["invert_mask"]
     overlay_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["overlay_mask"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     # extract data of the selected wavelength bands
     if (wavelength1 != "None") and (wavelength1 != ""):

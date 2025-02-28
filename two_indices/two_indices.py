@@ -65,7 +65,7 @@ def create_mask(settings, mask_preview=True):
     invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
     overlay_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["overlay_mask"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     # calculating index for mask
     index_functions = rayn_utils.get_index_functions()
