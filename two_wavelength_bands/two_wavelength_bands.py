@@ -22,6 +22,8 @@ def create_mask(settings, mask_preview=True):
 
     # extract masking setting
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
+
+    # get individual settings for readability
     wavelength1 = mask_options["wavelength1"]
     wavelength2 = mask_options["wavelength2"]
     logic_input = mask_options["logic_input"]
@@ -72,6 +74,10 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         combined_binary_img = pcv.invert(combined_binary_img)
 
-    rayn_utils.create_mask_preview(combined_binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
+    preview_settings = {
+        "overlay_mask": mask_options["overlay_mask"]
+    }
+
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
 
     return spectral_array, rvs_metadata, combined_binary_img

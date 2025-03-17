@@ -41,7 +41,7 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
     maximum = 1
     steps = 10
 
-    if setting == "mask_index1" or "mask_index2":  # defines the UI elements this is applied to
+    if setting == "mask_index1" or setting == "mask_index2":  # defines the UI elements this is applied to
         index_functions = rayn_utils.get_index_functions()
         minimum = index_functions[name][2]
         maximum = index_functions[name][3]
@@ -53,17 +53,18 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
 
 
 def create_mask(settings, mask_preview=True):
-
     # extract masking setting
-    mask_index1 = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index1"]
-    mask_index2 = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index2"]
-    logic_input = settings["experimentSettings"]["analysis"]["maskOptions"]["logic_input"]
-    index1_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index1_thresh"]
-    index2_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index2_thresh"]
-    fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
-    dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
-    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
-    overlay_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["overlay_mask"]
+    mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
+
+    # get individual settings for readability
+    mask_index1 = mask_options["mask_index1"]
+    mask_index2 = mask_options["mask_index2"]
+    logic_input = mask_options["logic_input"]
+    index1_thresh = mask_options["index1_thresh"]
+    index2_thresh = mask_options["index2_thresh"]
+    fill_size = mask_options["fill_size"]
+    dilate_pixel = mask_options["dilate_pixel"]
+    invert_mask = mask_options["invert_mask"]
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
@@ -92,6 +93,10 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         combined_binary_img = pcv.invert(combined_binary_img)
 
-    rayn_utils.create_mask_preview(combined_binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
+    preview_settings = {
+        "overlay_mask": mask_options["overlay_mask"]
+    }
+
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
 
     return spectral_array, rvs_metadata, combined_binary_img

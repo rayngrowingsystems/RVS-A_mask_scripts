@@ -54,12 +54,15 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
 def create_mask(settings, mask_preview=True):
 
     # extract masking setting
-    mask_index = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index"]
-    index_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index_thresh"]
-    fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
-    dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
-    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
-    overlay_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["overlay_mask"]
+    mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
+
+    # get individual settings for readability
+    mask_index = ["mask_index"]
+    index_thresh = ["index_thresh"]
+    fill_size = ["fill_size"]
+    dilate_pixel = ["dilate_pixel"]
+    invert_mask = ["invert_mask"]
+
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
@@ -79,6 +82,10 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         binary_img = pcv.invert(binary_img)
 
-    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
+    preview_settings = {
+        "overlay_mask": mask_options["overlay_mask"]
+    }
+
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
 
     return spectral_array, rvs_metadata, binary_img
