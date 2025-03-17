@@ -4,8 +4,9 @@ import json
 import glob
 import re
 
-REPO_DIR = "../"  # Adjust this to your repo root
-EXCLUDED_DIRS = {".git", ".idea", "tests"}  # Add any other unwanted directories
+REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Set REPO_DIR to the directory of the test file
+print(REPO_DIR)
+EXCLUDED_DIRS = {".git", ".idea", "tests", ".github"}  # Add any other unwanted directories
 
 # Find all script/config folders, **excluding hidden and test directories**
 script_dirs = [
@@ -13,6 +14,7 @@ script_dirs = [
     if os.path.isdir(os.path.join(REPO_DIR, d)) and d not in EXCLUDED_DIRS
 ]
 
+print(script_dirs)
 @pytest.mark.parametrize("config_path", [
     os.path.join(REPO_DIR, d, f"{d}.config") for d in script_dirs
 ])
