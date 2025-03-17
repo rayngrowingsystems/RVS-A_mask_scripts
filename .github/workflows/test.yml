@@ -3,10 +3,10 @@ name: Run Tests
 on:
   push:
     branches:
-      - main  # Change if using a different default branch
+      - "**"  # Change if using a different default branch
   pull_request:
     branches:
-      - main
+      - "**"
 
 jobs:
   test:
