@@ -14,3 +14,7 @@ two_indices/__pycache__/two_indices.cpython-310.pyc
 .idea/
 
 two_indices/__pycache__/
+
+*.pyc
+
+tests/__pycache__/
