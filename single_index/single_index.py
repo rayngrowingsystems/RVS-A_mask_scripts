@@ -84,7 +84,7 @@ def create_mask(settings, mask_preview=True):
 
     preview_settings = {
         "overlay_mask": mask_options["overlay_mask"],
-        "output_image": settings["outputImage"]
+        "output_image": settings["outputImage"] if "outputImage" in settings else None
     }
 
     rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
