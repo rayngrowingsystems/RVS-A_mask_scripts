@@ -1,3 +1,10 @@
+# This is just a configuration check, the mask scripts are not executed. Functionality is tested trough RVS analytics
+# tests.
+# Here is what's checked:
+# 1. Do the config file follow the correct structure
+# 2. Compare settings called in the mask scripts with the config file
+# 3. Check if all functions referenced in the config file are in the mask scripts
+
 import pytest
 import os
 import json
@@ -6,7 +13,7 @@ import re
 
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Set REPO_DIR to the directory of the test file
 print(REPO_DIR)
-EXCLUDED_DIRS = {".git", ".idea", "tests", ".github"}  # Add any other unwanted directories
+EXCLUDED_DIRS = {".git", ".idea", "tests", ".github", ".pytest_cache"}  # Add any other unwanted directories
 
 # Find all script/config folders, **excluding hidden and test directories**
 script_dirs = [
@@ -159,29 +166,29 @@ def extract_ui_elements_from_config(config_path):
 def test_script_functions_vs_config(script_path, config_path):
     """Test that all functions referenced in the config file exist in the script and contain the correct conditions."""
 
-    # ✅ Extract function names and parameter names
+    # Extract function names and parameter names
     script_functions, script_content = extract_functions_and_parameters(script_path)
 
-    # ✅ Extract required function mappings (e.g., "dropdown_values" -> "index_list")
+    # Extract required function mappings (e.g., "dropdown_values" -> "index_list")
     function_mapping = extract_ui_elements_from_config(config_path)
 
-    # ✅ Check if functions exist in the script
+    # Check if functions exist in the script
     missing_functions = {func for func in function_mapping.keys() if func not in script_functions}
     assert not missing_functions, f"Missing functions in {script_path}: {missing_functions}"
 
-    # ✅ Check if required conditions exist inside the correct function
+    # Check if required conditions exist inside the correct function
     for function_name, expected_setting in function_mapping.items():
         if function_name in script_functions:
             parameter_name = script_functions[function_name]  # Get the actual parameter used in the function
 
-            # ✅ Build regex patterns to check different condition formats
+            # Build regex patterns to check different condition formats
             condition_patterns = [
                 re.compile(rf'if {parameter_name}\s*==\s*["\']{expected_setting}["\']'),  # Single condition
                 re.compile(rf'if {parameter_name}\s*in\s*\[.*?["\']{expected_setting}["\'].*?\]'),  # List-based condition
                 re.compile(rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']')  # Multiple OR conditions
             ]
 
-            # ✅ Check if at least one pattern matches
+            # Check if at least one pattern matches
             condition_found = any(pattern.search(script_content) for pattern in condition_patterns)
 
             assert condition_found, (

@@ -32,7 +32,7 @@ def create_mask(settings, mask_preview=True):
     fill_size = mask_options["fill_size"]
     dilate_pixel = mask_options["dilate_pixel"]
     invert_mask = mask_options["invert_mask"]
-    overlay_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["overlay_mask"]
+    overlay_mask = mask_options["overlay_mask"]
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
@@ -78,6 +78,6 @@ def create_mask(settings, mask_preview=True):
         "overlay_mask": mask_options["overlay_mask"]
     }
 
-    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
+    rayn_utils.create_mask_preview(combined_binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
 
     return spectral_array, rvs_metadata, combined_binary_img
