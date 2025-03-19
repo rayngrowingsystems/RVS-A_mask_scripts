@@ -75,7 +75,8 @@ def create_mask(settings, mask_preview=True):
         combined_binary_img = pcv.invert(combined_binary_img)
 
     preview_settings = {
-        "overlay_mask": mask_options["overlay_mask"]
+        "overlay_mask": mask_options["overlay_mask"],
+        "output_image": settings["outputImage"]
     }
 
     rayn_utils.create_mask_preview(combined_binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)

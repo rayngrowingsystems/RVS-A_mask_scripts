@@ -57,11 +57,11 @@ def create_mask(settings, mask_preview=True):
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 
     # get individual settings for readability
-    mask_index = ["mask_index"]
-    index_thresh = ["index_thresh"]
-    fill_size = ["fill_size"]
-    dilate_pixel = ["dilate_pixel"]
-    invert_mask = ["invert_mask"]
+    mask_index = mask_options["mask_index"]
+    index_thresh = mask_options["index_thresh"]
+    fill_size = mask_options["fill_size"]
+    dilate_pixel = mask_options["dilate_pixel"]
+    invert_mask = mask_options["invert_mask"]
 
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
@@ -83,7 +83,8 @@ def create_mask(settings, mask_preview=True):
         binary_img = pcv.invert(binary_img)
 
     preview_settings = {
-        "overlay_mask": mask_options["overlay_mask"]
+        "overlay_mask": mask_options["overlay_mask"],
+        "output_image": settings["outputImage"]
     }
 
     rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, preview_settings, mask_preview)
