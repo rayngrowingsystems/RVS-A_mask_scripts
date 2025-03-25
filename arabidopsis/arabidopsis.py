@@ -32,7 +32,7 @@ def create_mask(settings, mask_preview=True):
     dilate_pixel = mask_options["dilate_pixel"]
     show_mask = mask_options["show_mask"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     index_array_ari = pcv.spectral_index.ari(hsi=spectral_array, distance=20)
     ari_mask = pcv.threshold.binary(gray_img=index_array_ari.array_data, threshold=ari_thresh, object_type="dark")
