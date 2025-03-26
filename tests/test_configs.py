@@ -192,7 +192,7 @@ def test_script_functions_vs_config(script_path, config_path):
                     rf'if {parameter_name}\s*in\s*\[.*?["\']{expected_setting}["\'].*?\]'
                 ),  # List-based condition
                 re.compile(
-                    rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']' # noqa: E501
+                    rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']'  # noqa: E501
                 ),  # Multiple OR conditions
             ]
 
