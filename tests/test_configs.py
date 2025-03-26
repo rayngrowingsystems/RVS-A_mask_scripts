@@ -5,26 +5,25 @@
 # 2. Compare settings called in the mask scripts with the config file
 # 3. Check if all functions referenced in the config file are in the mask scripts
 
-import pytest
-import os
 import json
-import glob
+import os
 import re
 
-REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Set REPO_DIR to the directory of the test file
+import pytest
+
+REPO_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..")
+)  # Set REPO_DIR to the directory of the test file
 print(REPO_DIR)
-EXCLUDED_DIRS = {".git", ".idea", "tests", ".github", ".pytest_cache"}  # Add any other unwanted directories
+EXCLUDED_DIRS = {".git", ".idea", "tests", ".github", ".pytest_cache", ".ruff_cache"}  # Add any other unwanted directories
 
 # Find all script/config folders, **excluding hidden and test directories**
-script_dirs = [
-    d for d in os.listdir(REPO_DIR)
-    if os.path.isdir(os.path.join(REPO_DIR, d)) and d not in EXCLUDED_DIRS
-]
+script_dirs = [d for d in os.listdir(REPO_DIR) if os.path.isdir(os.path.join(REPO_DIR, d)) and d not in EXCLUDED_DIRS]
 
 print(script_dirs)
-@pytest.mark.parametrize("config_path", [
-    os.path.join(REPO_DIR, d, f"{d}.config") for d in script_dirs
-])
+
+
+@pytest.mark.parametrize("config_path", [os.path.join(REPO_DIR, d, f"{d}.config") for d in script_dirs])
 def test_config_structure(config_path):
     """Test if config files contain the correct 'mask' structure."""
 
@@ -66,9 +65,7 @@ script_config_pairs = [
 ]
 
 # Regular expressions
-settings_assignment_pattern = re.compile(
-    r'(\w+)\s*=\s*settings\["experimentSettings"\]\["analysis"\]\["maskOptions"\]'
-)
+settings_assignment_pattern = re.compile(r'(\w+)\s*=\s*settings\["experimentSettings"\]\["analysis"\]\["maskOptions"\]')
 settings_access_pattern = re.compile(r'settings\["experimentSettings"\]\["analysis"\]\["maskOptions"\]\["(.*?)"\]')
 variable_access_pattern = None  # Will be set dynamically based on assignment
 
@@ -184,8 +181,12 @@ def test_script_functions_vs_config(script_path, config_path):
             # Build regex patterns to check different condition formats
             condition_patterns = [
                 re.compile(rf'if {parameter_name}\s*==\s*["\']{expected_setting}["\']'),  # Single condition
-                re.compile(rf'if {parameter_name}\s*in\s*\[.*?["\']{expected_setting}["\'].*?\]'),  # List-based condition
-                re.compile(rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']')  # Multiple OR conditions
+                re.compile(
+                    rf'if {parameter_name}\s*in\s*\[.*?["\']{expected_setting}["\'].*?\]'
+                ),  # List-based condition
+                re.compile(
+                    rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']'
+                ),  # Multiple OR conditions
             ]
 
             # Check if at least one pattern matches
