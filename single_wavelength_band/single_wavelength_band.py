@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def create_mask(settings, mask_preview=True):
-
     # extract masking setting
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 

@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
-import numpy as np
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def dropdown_values(name, wavelengths):  # fills the index dropdown (see .config file)
-
     if name == "index_list":  # defines the UI element this is applied to
         index_dict_dd = rayn_utils.get_index_functions()
         name_list = list(index_dict_dd)

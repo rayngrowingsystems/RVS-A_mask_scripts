@@ -13,13 +13,12 @@
 # limitations under the License.
 
 import os
-import warnings
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def create_mask(settings, mask_preview=True):
-
     # extract masking setting
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 
@@ -40,8 +39,9 @@ def create_mask(settings, mask_preview=True):
     ari_fr = pcv.logical_and(ari_mask, fr_mask)
     green_mask = pcv.threshold.binary(gray_img=spectral_array.array_data[:, :, 3], threshold=green_thresh)
     ari_fr_green = pcv.logical_and(ari_fr, green_mask)
-    blue_mask = pcv.threshold.binary(gray_img=spectral_array.array_data[:, :, 1], threshold=blue_thresh,
-                                     object_type="dark")
+    blue_mask = pcv.threshold.binary(
+        gray_img=spectral_array.array_data[:, :, 1], threshold=blue_thresh, object_type="dark"
+    )
     ari_fr_green_blue = pcv.logical_and(ari_fr_green, blue_mask)
 
     combined_mask = pcv.fill(ari_fr_green_blue, size=fill_size)
@@ -57,7 +57,7 @@ def create_mask(settings, mask_preview=True):
         "ari_fr": ari_fr,
         "ari_fr_green": ari_fr_green,
         "ari_fr_green_blue": ari_fr_green_blue,
-        "combined_mask": combined_mask
+        "combined_mask": combined_mask,
     }
 
     if mask_preview:
@@ -70,9 +70,7 @@ def create_mask(settings, mask_preview=True):
 
 
 def dropdown_values(setting, wavelengths):  # fills the index dropdown (see .config file)
-
     if setting == "mask_list":  # defines the UI element this is applied to
-
         mask_dict = {
             "ari_mask": "ARI mask",
             "fr_mask": "Far red band mask",
@@ -81,7 +79,7 @@ def dropdown_values(setting, wavelengths):  # fills the index dropdown (see .con
             "ari_fr": "ARI + far red",
             "ari_fr_green": "ARI + far red + green",
             "ari_fr_green_blue": "ARI + far red + green + blue",
-            "combined_mask": "Final combined mask"
+            "combined_mask": "Final combined mask",
         }
 
         name_list = list(mask_dict)

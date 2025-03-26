@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def create_mask(settings, mask_preview=True):
-
     # extract masking setting
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 
@@ -32,7 +31,6 @@ def create_mask(settings, mask_preview=True):
     fill_size = mask_options["fill_size"]
     dilate_pixel = mask_options["dilate_pixel"]
     invert_mask = mask_options["invert_mask"]
-    overlay_mask = mask_options["overlay_mask"]
 
     spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 

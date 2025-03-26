@@ -15,7 +15,14 @@ REPO_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..")
 )  # Set REPO_DIR to the directory of the test file
 print(REPO_DIR)
-EXCLUDED_DIRS = {".git", ".idea", "tests", ".github", ".pytest_cache", ".ruff_cache"}  # Add any other unwanted directories
+EXCLUDED_DIRS = {
+    ".git",
+    ".idea",
+    "tests",
+    ".github",
+    ".pytest_cache",
+    ".ruff_cache",
+}  # Add any other unwanted directories
 
 # Find all script/config folders, **excluding hidden and test directories**
 script_dirs = [d for d in os.listdir(REPO_DIR) if os.path.isdir(os.path.join(REPO_DIR, d)) and d not in EXCLUDED_DIRS]
@@ -185,7 +192,7 @@ def test_script_functions_vs_config(script_path, config_path):
                     rf'if {parameter_name}\s*in\s*\[.*?["\']{expected_setting}["\'].*?\]'
                 ),  # List-based condition
                 re.compile(
-                    rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']'
+                    rf'if {parameter_name}\s*==\s*["\'].*?["\']\s*or\s*{parameter_name}\s*==\s*["\']{expected_setting}["\']' # noqa: E501
                 ),  # Multiple OR conditions
             ]
 
