@@ -12,14 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import numpy as np
-from plantcv import plantcv as pcv
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def dropdown_values(setting, wavelengths):  # fills the index dropdown (see .config file)
-
     if setting == "index_list":  # defines the UI element this is applied to
         index_dict_dd = rayn_utils.get_index_functions()
         name_list = list(index_dict_dd)
@@ -44,32 +42,34 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
         index_functions = rayn_utils.get_index_functions()
         minimum = index_functions[name][2]
         maximum = index_functions[name][3]
-        value = (maximum - minimum)/2 + minimum
+        value = (maximum - minimum) / 2 + minimum
         steps = 500
         print(f"index settings: min {minimum}, max {maximum}, steps {steps}, value {value}")
-            
+
     return minimum, maximum, steps, value
 
 
 def create_mask(settings, mask_preview=True):
-    # file and folder
-    img_file = settings["inputImage"]
-
     # extract masking setting
-    mask_index = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index"]
-    index_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index_thresh"]
-    fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
-    dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
-    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
+    mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    # get individual settings for readability
+    mask_index = mask_options["mask_index"]
+    index_thresh = mask_options["index_thresh"]
+    fill_size = mask_options["fill_size"]
+    dilate_pixel = mask_options["dilate_pixel"]
+    invert_mask = mask_options["invert_mask"]
+
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     # calculating index for mask
     index_functions = rayn_utils.get_index_functions()
     index_array = index_functions[mask_index][1](spectral_array, distance=20)  # TODO: expose the distance parameter
-    print(f"min: {np.ma.masked_invalid(index_array.array_data).min()}, "
-          f"max: {np.ma.masked_invalid(index_array.array_data).max()}, "
-          f"mean: {np.ma.masked_invalid(index_array.array_data).mean()}")
+    print(
+        f"min: {np.ma.masked_invalid(index_array.array_data).min()}, "
+        f"max: {np.ma.masked_invalid(index_array.array_data).max()}, "
+        f"mean: {np.ma.masked_invalid(index_array.array_data).mean()}"
+    )
 
     binary_img = pcv.threshold.binary(gray_img=index_array.array_data, threshold=index_thresh)
     binary_img = pcv.fill(bin_img=binary_img, size=fill_size)  # fill pixel
@@ -80,10 +80,6 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         binary_img = pcv.invert(binary_img)
 
-    if mask_preview:
-        out_image = settings["outputImage"]
-        image_file_name = os.path.normpath(out_image)
-        print("Writing image to " + image_file_name)
-        pcv.print_image(img=binary_img, filename=image_file_name)
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
 
     return spectral_array, rvs_metadata, binary_img

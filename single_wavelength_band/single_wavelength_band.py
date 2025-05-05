@@ -12,24 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def create_mask(settings, mask_preview=True):
-    # file and folder
-    img_file = settings["inputImage"]
-
     # extract masking setting
-    selected_wl = settings["experimentSettings"]["analysis"]["maskOptions"]["wavelength"]
-    wl_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["wl_thresh"]
-    fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
-    dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
-    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
+    mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    # get individual settings for readability
+    selected_wl = mask_options["wavelength"]
+    wl_thresh = mask_options["wl_thresh"]
+    fill_size = mask_options["fill_size"]
+    dilate_pixel = mask_options["dilate_pixel"]
+    invert_mask = mask_options["invert_mask"]
+
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     # get data from selected wavelength band
     if (selected_wl != "None") and (selected_wl != ""):
@@ -51,10 +51,6 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         binary_img = pcv.invert(binary_img)
 
-    if mask_preview:
-        out_image = settings["outputImage"]
-        image_file_name = os.path.normpath(out_image)
-        print("Writing image to " + image_file_name)
-        pcv.print_image(img=binary_img, filename=image_file_name)
+    rayn_utils.create_mask_preview(binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
 
     return spectral_array, rvs_metadata, binary_img

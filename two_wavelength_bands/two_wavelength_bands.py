@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def create_mask(settings, mask_preview=True):
-    # file and folder
-    img_file = settings["inputImage"]
-
     # extract masking setting
     mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
+
+    # get individual settings for readability
     wavelength1 = mask_options["wavelength1"]
     wavelength2 = mask_options["wavelength2"]
     logic_input = mask_options["logic_input"]
@@ -33,7 +32,7 @@ def create_mask(settings, mask_preview=True):
     dilate_pixel = mask_options["dilate_pixel"]
     invert_mask = mask_options["invert_mask"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     # extract data of the selected wavelength bands
     if (wavelength1 != "None") and (wavelength1 != ""):
@@ -73,10 +72,6 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         combined_binary_img = pcv.invert(combined_binary_img)
 
-    if mask_preview:
-        out_image = settings["outputImage"]
-        image_file_name = os.path.normpath(out_image)
-        print("Writing image to " + image_file_name)
-        pcv.print_image(img=combined_binary_img, filename=image_file_name)
+    rayn_utils.create_mask_preview(combined_binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
 
     return spectral_array, rvs_metadata, combined_binary_img

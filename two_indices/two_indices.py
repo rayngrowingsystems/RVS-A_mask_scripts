@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
-import numpy as np
-from plantcv import plantcv as pcv
+
 import rayn_utils
+from plantcv import plantcv as pcv
 
 
 def dropdown_values(name, wavelengths):  # fills the index dropdown (see .config file)
-
     if name == "index_list":  # defines the UI element this is applied to
         index_dict_dd = rayn_utils.get_index_functions()
         name_list = list(index_dict_dd)
@@ -41,7 +39,7 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
     maximum = 1
     steps = 10
 
-    if setting == "mask_index1" or "mask_index2":  # defines the UI elements this is applied to
+    if setting == "mask_index1" or setting == "mask_index2":  # defines the UI elements this is applied to
         index_functions = rayn_utils.get_index_functions()
         minimum = index_functions[name][2]
         maximum = index_functions[name][3]
@@ -53,20 +51,20 @@ def range_values(setting, name, index):  # sets the slider ranges (see .config f
 
 
 def create_mask(settings, mask_preview=True):
-    # file and folder
-    img_file = settings["inputImage"]
-
     # extract masking setting
-    mask_index1 = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index1"]
-    mask_index2 = settings["experimentSettings"]["analysis"]["maskOptions"]["mask_index2"]
-    logic_input = settings["experimentSettings"]["analysis"]["maskOptions"]["logic_input"]
-    index1_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index1_thresh"]
-    index2_thresh = settings["experimentSettings"]["analysis"]["maskOptions"]["index2_thresh"]
-    fill_size = settings["experimentSettings"]["analysis"]["maskOptions"]["fill_size"]
-    dilate_pixel = settings["experimentSettings"]["analysis"]["maskOptions"]["dilate_pixel"]
-    invert_mask = settings["experimentSettings"]["analysis"]["maskOptions"]["invert_mask"]
+    mask_options = settings["experimentSettings"]["analysis"]["maskOptions"]
 
-    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings)
+    # get individual settings for readability
+    mask_index1 = mask_options["mask_index1"]
+    mask_index2 = mask_options["mask_index2"]
+    logic_input = mask_options["logic_input"]
+    index1_thresh = mask_options["index1_thresh"]
+    index2_thresh = mask_options["index2_thresh"]
+    fill_size = mask_options["fill_size"]
+    dilate_pixel = mask_options["dilate_pixel"]
+    invert_mask = mask_options["invert_mask"]
+
+    spectral_array, rvs_metadata = rayn_utils.prepare_spectral_data(settings, preview=mask_preview)
 
     # calculating index for mask
     index_functions = rayn_utils.get_index_functions()
@@ -93,10 +91,6 @@ def create_mask(settings, mask_preview=True):
     if invert_mask:
         combined_binary_img = pcv.invert(combined_binary_img)
 
-    if mask_preview:
-        out_image = settings["outputImage"]
-        image_file_name = os.path.normpath(out_image)
-        print("Writing image to " + image_file_name)
-        pcv.print_image(img=combined_binary_img, filename=image_file_name)
+    rayn_utils.create_mask_preview(combined_binary_img, spectral_array.pseudo_rgb, settings, mask_preview)
 
     return spectral_array, rvs_metadata, combined_binary_img
