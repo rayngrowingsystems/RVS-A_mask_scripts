@@ -20,8 +20,7 @@ drop-down menu and can be selected from there.
 
 ## Support
 If you experience any problems or have feedback on the mask scripts, please add an issue to this 
-[repository](https://github.com/rayngrowingsystems/RVS-A_mask_scripts/issues) or contact 
-[RAYN Vision Support](mailto:RAYNVisionSupport@rayngrowingsystems.com).
+[repository](https://github.com/rayngrowingsystems/RVS-A_mask_scripts/issues).
 
 ## Contributing
 Whether it's fixing bugs, adding functionality to existing mask scripts or adding entirely new mask
